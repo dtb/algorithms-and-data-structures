@@ -19,6 +19,12 @@
 void _quick_sort(int *data, int left, int right);
 int partition(int *data, int left, int right);
 
+void swap(int *data, int a, int b) {
+	int tmp = data[a];
+	data[a] = data[b];
+	data[b] = tmp;
+}
+
 void sort(int *data, int nElem)
 {
 	_quick_sort(data, 0, nElem - 1);
@@ -36,29 +42,22 @@ void _quick_sort(int *data, int left, int right)
 
 int partition(int *data, int left, int right)
 {
-	int pivotIdx = left;
-	int pivot = *(data + pivotIdx);
+	int pivot = data[left];
 	
-	int tmp = *(data + right);
-	*(data + right) = pivot;
-	*(data + pivotIdx) = tmp;
-		
+	swap(data, right, left);
+
 	int leftmost = left;
 	int i = left;
 	for(i; i < right; i++)
 	{
-		if(*(data + i) <= pivot)
+		if(data[i] <= pivot)
 		{
-			tmp = *(data + leftmost);
-			*(data + leftmost) = *(data + i);
-			*(data + i) = tmp;
+			swap(data, leftmost, i);
 			leftmost++;
 		}
 	}
 	
-	tmp = *(data + leftmost);
-	*(data + leftmost) = pivot;
-	*(data + right) = tmp;
+	swap(data, leftmost, right);
 	
 	return leftmost;
 }
@@ -67,9 +66,9 @@ void display(int *data, int n)
 {
 	int i;
 	for(i = 0; i < n -1; i++)
-		printf("%d, ", *(data + i));
+		printf("%d, ", data[i]);
 		
-	printf("%d\n", *(data + i));
+	printf("%d\n", data[i]);
 }
 
 
@@ -77,21 +76,22 @@ int main(int argc, char** argv)
 {
 	int N = DEFAULT_N;
 	if(argc == 2)
-		N = atoi(*(argv + 1));
+		N = atoi(argv[1]);
 		
 	int * data = (int*) malloc(sizeof(int) * N);
 	int i;
 	srand(time(NULL));
 	for(i = 0; i < N; i++)
 	{
-		*(data + i) = 3*N*(double)rand()/RAND_MAX;
+		data[i] = 3*N*(double)rand()/RAND_MAX;
 	}
 	
-	display(data, 25);
+	display(data, N);
 	
 	sort(data, N);
+	printf("\n");
 	
-	display(data, 25);
+	display(data, N);
 	
 	printf("\n");
 	return 0;
